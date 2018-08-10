@@ -1,37 +1,24 @@
-{ configPath ? ./config.json }:
+with builtins;
 
 let
-  system = "x86_64-linux";
-  api = import ../../default.nix { inherit system; };
-  pkgs = import ../../common.nix { inherit system; };
+  conf = fromJSON (readFile ./config.json);
+  nodes = map makeKafka conf.nodes;
+  names = map (node: node.name) conf.nodes;
+  instances = length names;
 
-  kafkaConfig = builtins.fromJSON (builtins.readFile configPath);
-  kafkaNodes = map makeNode kafkaConfig.nodes;
-
-  nodeCount = builtins.length kafkaNodes;
-  replicationFactor = builtins.toString (if nodeCount < 3 then nodeCount else 3);
-
-  makeNode = node: {
+  makeKafka = node: {
     name = node.name;
-    value = { lib, ... }: {
-      nixpkgs.system = system;
-
-      networking.firewall = {
-        enable = true;
-        allowPing = true;
-        allowedTCPPorts = [ 22 2181 2888 3888 ];
-      };
-
-      services.openssh.enable = true;
+    value = { lib, ... }: import ../common.nix // {
+      networking.firewall.allowedTCPPorts = [ 22 2181 2888 3888 ];
 
       services.apache-kafka = {
         enable = true;
         brokerId = node.id;
         hostname = node.name;
-        zookeeper = lib.concatStringsSep "," (map (node: node.name) kafkaNodes);
+        zookeeper = lib.concatStringsSep "," names;
         logDirs = [ "/data-kafka" ];
         extraProperties = ''
-          offsets.topic.replication.factor = ${replicationFactor}
+          offsets.topic.replication.factor = ${toString (if instances < 3 then instances else 3)}
         '';
       };
 
@@ -40,8 +27,8 @@ let
         id = node.id;
         dataDir = "/data-zk";
         servers =
-          let toLine = n: x: "server.${toString (builtins.sub n 1)}=${x.name}:2888:3888\n";
-          in lib.concatImapStrings toLine kafkaNodes;
+          let toLine = n: name: "server.${toString (sub n 1)}=${name}:2888:3888\n";
+          in lib.concatImapStrings toLine names;
       };
     };
   };
@@ -51,6 +38,4 @@ in {
     description = "ota-kafka-zk";
     enableRollback = true;
   };
-}
-
-// builtins.listToAttrs kafkaNodes
+} // listToAttrs nodes
