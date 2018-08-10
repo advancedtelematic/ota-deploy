@@ -1,6 +1,6 @@
 SHELL := /usr/bin/env bash
 
-DEPLOY  ?= ota-kafka-zk
+DEPLOY  ?= ota-cassandra
 NIXOPS  ?= $(shell which nixops)
 COMMIT  ?= $(shell jq '.commit' < ../../nixpkgs.json)
 NIXPKGS ?= https://github.com/NixOS/nixpkgs/archive/$(COMMIT).tar.gz
@@ -11,7 +11,7 @@ NIXPKGS ?= https://github.com/NixOS/nixpkgs/archive/$(COMMIT).tar.gz
 help: ## Print this message and exit
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%16s\033[0m : %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
-vbox-create: %-create: create-%     ## Deploy Kafka and Zookeeper to VirtualBox.
+vbox-create: %-create: create-%     ## Deploy MariaDB to VirtualBox.
 vbox-destroy: %-destroy: destroy-%  ## Destroy an existing VirtualBox deployment.
 
 create-%: cmd-nixops

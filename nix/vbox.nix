@@ -1,11 +1,11 @@
 let
   pkgs = import ./nixpkgs.nix;
 
-  unpackImage = name: sha256:
-    pkgs.runCommand "virtualbox-nixops-${name}.vmdk" { preferLocalBuild = true; allowSubstitutes = false; }
+  unpackImage = image: sha256:
+    pkgs.runCommand "virtualbox-nixops-${image}.vmdk" { preferLocalBuild = true; allowSubstitutes = false; }
       ''
         xz -d < ${pkgs.fetchurl {
-          url = "https://nixos.org/releases/nixos/virtualbox-nixops-images/virtualbox-nixops-${name}.vmdk.xz";
+          url = "https://nixos.org/releases/nixos/virtualbox-nixops-images/virtualbox-nixops-${image}.vmdk.xz";
           inherit sha256;
         }} > $out
       '';

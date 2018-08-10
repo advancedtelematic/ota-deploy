@@ -2,8 +2,8 @@ SHELL := /usr/bin/env bash
 
 DEPLOY  ?= ota-mariadb
 NIXOPS  ?= $(shell which nixops)
-COMMIT  ?= d0c868ec17c2cb2ca845f33fbfe381e9c7e55516
-NIXPKGS ?= https://github.com/NixOS/nixpkgs-channels/archive/$(COMMIT).tar.gz
+COMMIT  ?= $(shell jq '.commit' < ../../nixpkgs.json)
+NIXPKGS ?= https://github.com/NixOS/nixpkgs/archive/$(COMMIT).tar.gz
 
 .PHONY: vbox-create vbox-destroy
 .DEFAULT_GOAL := help
