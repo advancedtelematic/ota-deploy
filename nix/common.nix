@@ -4,7 +4,7 @@ in {
   i18n.defaultLocale = "en_US.UTF-8";
 
   networking.firewall = {
-    enable = true;
+    enable    = true;
     allowPing = true;
   };
 

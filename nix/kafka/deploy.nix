@@ -1,13 +1,13 @@
 with builtins;
 
 let
-  conf = fromJSON (readFile ./config.json);
-  nodes = map makeKafka conf.nodes;
+  conf  = fromJSON (readFile ./config.json);
+  nodes = listToAttrs (map makeBroker conf.nodes);
   names = map (node: node.name) conf.nodes;
   brokers = length names;
 
-  makeKafka = node: {
-    name = node.name;
+  makeBroker = node: {
+    name  = node.name;
     value = { lib, ... }:
       import ../common.nix //
       {
@@ -40,4 +40,5 @@ in {
     description = "Kafka & Zookeeper";
     enableRollback = true;
   };
-} // listToAttrs nodes
+
+} // nodes
