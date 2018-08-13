@@ -1,13 +1,13 @@
 with builtins;
 
 let
-  vbox = import ../vbox.nix;
-  conf = fromJSON (readFile ./config.json);
+  nixos = import ../nixos.nix;
+  conf  = fromJSON (readFile ./config.json);
+  nodes = map makeNode conf.nodes;
 
-  makeVbox = node: {
-    name = node.name;
-    value = vbox.makeImage 2 2048;
+  makeNode = node: {
+    name  = node.name;
+    value = nixos.makeVbox { cpu = 2; mem = 2048; };
   };
-  nodes = map makeVbox conf.nodes;
 
 in listToAttrs nodes

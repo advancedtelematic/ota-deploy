@@ -1,5 +1,5 @@
 {
   "nodes": [
-    {"id": 0, "name": "kafka-zk-0"}
+    {"id": 0, "name": "kafka0"}
   ]
 }

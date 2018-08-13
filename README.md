@@ -7,18 +7,20 @@
 To install Nix on Linux and MacOS, first inspect the script then run the following command:
 
 ```
-$ curl https://nixos.org/nix/install | sh
+curl https://nixos.org/nix/install | sh
 ```
 
 With Nix installed, install NixOps with:
 
 ```
-$ nix-env -i nixops
+nix-env -i nixops
 ```
 
-### Building Linux packages in MacOS
+### Building Linux packages in macOS
 
-Set up [Remote Builds](https://nixos.org/nix/manual/#chap-distributed-builds) to allow building `x86_64-linux` packages from MacOS. One of the simplest ways to do so is using Docker with the [nix-docker](https://github.com/LnL7/nix-docker#running-as-a-remote-builder) repository.
+Set up [Remote Builds](https://nixos.org/nix/manual/#chap-distributed-builds) to allow building `x86_64-linux` packages from macOS. Docker can be used for this purpose via the [nix-docker](https://github.com/LnL7/nix-docker#running-as-a-remote-builder) repository.
+
+For a quick-start guide, take a look at [Provisioning a NixOS server from macOS](https://medium.com/@zw3rk/provisioning-a-nixos-server-from-macos-d36055afc4ad).
 
 ## Deploying the OTA Services
 

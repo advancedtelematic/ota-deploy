@@ -1,6 +1,6 @@
 let
-  vbox = import ../vbox.nix;
+  nixos = import ../nixos.nix;
 
 in {
-  mariadb = vbox.makeImage 2 1024;
+  cassandra = nixos.makeVbox { cpu = 2; mem = 1024; };
 }
