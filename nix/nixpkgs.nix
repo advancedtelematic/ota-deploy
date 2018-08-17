@@ -4,7 +4,7 @@ let
   version = fromJSON (readFile ../nixpkgs.json);
   nixpkgs = fetchTarball {
     url    = "https://github.com/NixOS/nixpkgs/archive/${version.commit}.tar.gz";
-    #FIXME: sha256 = version.sha256;
+    sha256 = version.sha256;
   };
 
   config = {

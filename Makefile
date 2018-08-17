@@ -15,8 +15,8 @@ help: ## Print this message and exit
 create-kafka: create-%: create_%  ## Create a new Kafka deployment.
 delete-kafka: delete-%: delete_%  ## Delete an existing Kafka deployment.
 
-create-db: create-%: create_%     ## Create a new database deployment.
-delete-db: delete-%: delete_%     ## Delete an existing database deployment.
+create-mariadb: create-%: create_%  ## Create a new MariaDB deployment.
+delete-mariadb: delete-%: delete_%  ## Delete an existing MariaDB deployment.
 
 create-kube: create-%: create_%   ## Create a new Kubernetes deployment.
 delete-kube: delete-%: delete_%   ## Delete an existing Kubernetes deployment.

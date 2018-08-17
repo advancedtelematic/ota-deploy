@@ -7,7 +7,9 @@ in {
     enableRollback = true;
   };
 
-  db = import ../common.nix // {
+  defaults.imports = [ ../common.nix ];
+
+  db = { config, ... }: {
     networking.firewall.allowedTCPPorts = [ 22 3306 9042 ];
 
     services.mysql = {

@@ -4,7 +4,7 @@ let
   nixos = import ../nixos.nix;
   conf  = fromJSON (readFile ./config.json);
 
-  makeNode = node: {
+  makeNode = node: { ... }: {
     name  = node.name;
     value = nixos.makeVbox { cpu = 2; mem = 2048; };
   };
