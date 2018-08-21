@@ -1,13 +1,14 @@
-{ instances ? 1 }:
+{ kafkaImage
+, instances
+}:
 
 with builtins;
 with import ../nixpkgs.nix;
 with pkgs.lib;
 
 let
-  ids     = range 0 (sub instances 1);
-  nodes   = map (id: { id=id; name="kafka-${toString id}"; }) ids;
-  brokers = listToAttrs (map makeBroker nodes);
+  ids   = range 0 (sub instances 1);
+  nodes = map (id: { id=id; name ="kafka-${toString id}"; }) ids;
 
   makeBroker = node: {
     name  = node.name;
@@ -33,15 +34,9 @@ let
           let configLine = node: "server.${toString node.id}=${node.name}:2888:3888";
           in  concatStringsSep "\n" (map configLine nodes);
       };
-    };
+    } // kafkaImage;
   };
 
-in {
-  network = {
-    description = "Kafka & Zookeeper";
-    enableRollback = true;
-  };
+  brokers = listToAttrs (map makeBroker nodes);
 
-  defaults.imports = [ ../common.nix ];
-
-} // brokers
+in brokers
