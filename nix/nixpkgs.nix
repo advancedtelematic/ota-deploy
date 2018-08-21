@@ -7,12 +7,7 @@ let
     sha256 = version.sha256;
   };
 
-  config = {
-    allowUnfree = true;
-  };
+  config.allowUnfree = true;
+  pkgs = import nixpkgs { inherit config; system = "x86_64-linux"; };
 
-  overlays = [
-    (newPkgs: oldPkgs: {})
-  ];
-
-in import nixpkgs { inherit config overlays; system = "x86_64-linux"; }
+in pkgs

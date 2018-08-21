@@ -1,6 +1,6 @@
-let
-  pkgs = import ./nixpkgs.nix;
+with import ./nixpkgs.nix;
 
+let
   unpackImage = { image, sha256 }:
     pkgs.runCommand "virtualbox-nixops-${image}.vmdk" { preferLocalBuild = true; allowSubstitutes = false; }
       ''

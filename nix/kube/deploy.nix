@@ -1,7 +1,6 @@
-let
-  pkgs = import ../nixpkgs.nix;
+with import ../nixpkgs.nix;
 
-in {
+{
   network = {
     description = "Kubernetes";
     enableRollback = true;
@@ -11,7 +10,7 @@ in {
 
   kube = { config, nodes, ... }:
     let
-      kubernetes = import ./kubernetes.nix {
+      cluster = import ./cluster.nix {
         inherit config nodes;
         basicAuthFile = pkgs.writeText "users" ''
           kubernetes,admin,0,"system:masters"
@@ -19,7 +18,7 @@ in {
       };
 
     in {
-      imports = [ kubernetes ];
+      imports = [ cluster ];
 
       services.kubernetes = {
         roles   = ["master" "node"];

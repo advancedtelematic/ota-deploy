@@ -1,7 +1,6 @@
-let
-  pkgs = import ../nixpkgs.nix;
+with import ../nixpkgs.nix;
 
-in {
+{
   network = {
     description = "MariaDB & Cassandra";
     enableRollback = true;

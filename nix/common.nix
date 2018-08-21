@@ -1,6 +1,4 @@
-let
-
-in {
+{
   i18n.defaultLocale = "en_US.UTF-8";
 
   networking.firewall = {
@@ -15,6 +13,6 @@ in {
 
   users = {
     mutableUsers = false;
-    users.root.openssh.authorizedKeys.keyFiles = [ ../keys/insecure_rsa_key.pub ];
+    users.root.openssh.authorizedKeys.keyFiles = [];
   };
 }

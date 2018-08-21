@@ -15,11 +15,10 @@
 }:
 
 with builtins;
+with import ../nixpkgs.nix;
+with pkgs.lib;
 
 let
-  pkgs = import ../nixpkgs.nix;
-  lib  = pkgs.lib;
-
   masterNames = (filter (hostName: any (role: role == "master")
                                        nodes.${hostName}.config.services.kubernetes.roles)
                         (attrNames nodes));

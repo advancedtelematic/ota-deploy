@@ -6,11 +6,10 @@
 }:
 
 with builtins;
+with import ../nixpkgs.nix;
+with pkgs.lib;
 
 let
-  pkgs = import ../nixpkgs.nix;
-  lib  = pkgs.lib;
-
   runWithCFSSL = name: cmd:
     let secrets = pkgs.runCommand "${name}-cfss.json" {
         buildInputs = [ pkgs.cfssl pkgs.jq ];

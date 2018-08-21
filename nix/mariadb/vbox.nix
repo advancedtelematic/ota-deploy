@@ -1,7 +1,5 @@
-let
-  nixos = import ../nixos.nix;
-  image = nixos.makeVbox { cpu = 2; mem = 2048; };
+with import ../nixos.nix;
 
-in {
-  db = { ... }: image;
+{
+  db = { ... }: makeVbox { cpu = 2; mem = 2048; };
 }
