@@ -1,8 +1,7 @@
-{
-  externalDomain   ? "kubernetes.local",
-  serviceClusterIp ? "10.0.0.1",
-  etcdMasterHosts  ? [],
-  kubelets
+{ kubelets
+, externalDomain   ? "ota.local"
+, serviceClusterIp ? "10.0.0.1"
+, etcdMasterHosts  ? []
 }:
 
 with builtins;

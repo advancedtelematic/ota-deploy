@@ -3,9 +3,9 @@ with import ../nixpkgs.nix;
 with pkgs.lib;
 
 let
-  dbImage    = makeVbox { cpu = 2; mem = 2048; };
-  kafkaImage = makeVbox { cpu = 2; mem = 2048; };
-  kubeImage  = makeVbox { cpu = 2; mem = 4096; };
+  dbImage    = makeVbox { cpu = 1; mem = 2048; };
+  kafkaImage = makeVbox { cpu = 1; mem = 2048; };
+  kubeImage  = makeVbox { cpu = 4; mem = 8192; };
 
   kafkaBrokers = import ../kafka {
     inherit kafkaImage;

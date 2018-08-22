@@ -4,7 +4,7 @@
 
 ### Installing Nix and NixOps
 
-To install Nix on Linux and macOS, run the following command (ideally after inspecting the script yourself):
+To install Nix on Linux and macOS, run the following command (after inspecting the script yourself):
 
 ```
 curl https://nixos.org/nix/install | sh
@@ -41,3 +41,31 @@ For example, to deploy all OTA services to VirtualBox use the following command:
 `make create-vbox`
 
 This will create a NixOps deployment using the definition from `nix/vbox/default.nix`.
+
+### Setting up kubectl for VirtualBox
+
+To use kubectl from the host, add entries to your `~/.kube/config` (or equivalent) to match the following layout:
+
+```
+apiVersion: v1
+clusters:
+- cluster:
+    server: https://**VIRTUALBOX_IP**:443
+    insecure-skip-tls-verify: true
+  name: nix
+contexts:
+- context:
+    cluster: nix
+    user: nix
+  name: nix
+current-context: nix
+kind: Config
+preferences: {}
+users:
+- name: nix
+  user:
+    password: kubernetes
+    username: admin
+```
+
+Replace `**VIRTUALBOX_IP**` value with the actual assigned IP.

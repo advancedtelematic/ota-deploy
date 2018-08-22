@@ -1,17 +1,16 @@
-{
-  config,
-  nodes,
-  domain ? "kubernetes.local",
-  authorizationMode ? ["RBAC" "Node"],
-  basicAuthFile ? null,
-  oidc ? {
+{ config
+, nodes
+, domain ? "kubernetes.local"
+, authorizationMode ? ["RBAC" "Node"]
+, basicAuthFile ? null
+, oidc ? {
     issuerUrl     = "https://${domain}/auth/realms/master";
     clientId      = "kubernetes";
     usernameClaim = "email";
     groupsClaim   = "groups";
     groupsPrefix  = "oidc:";
-  },
-  ...
+  }
+, ...
 }:
 
 with builtins;

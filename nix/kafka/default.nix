@@ -1,4 +1,6 @@
 { kafkaImage
+, kafkaDataDir ? "/data-kafka"
+, zkDataDir ? "/data-zookeeper"
 , instances
 }:
 
@@ -8,7 +10,7 @@ with pkgs.lib;
 
 let
   ids   = range 0 (sub instances 1);
-  nodes = map (id: { id=id; name ="kafka-${toString id}"; }) ids;
+  nodes = map (id: { id=id; name="kafka-${toString id}"; }) ids;
 
   makeBroker = node: {
     name  = node.name;
@@ -20,7 +22,7 @@ let
         brokerId  = node.id;
         hostname  = node.name;
         zookeeper = concatStringsSep "," (map (node: node.name) nodes);
-        logDirs   = [ "/data-kafka" ];
+        logDirs   = [ kafkaDataDir ];
         extraProperties = ''
           offsets.topic.replication.factor = ${toString (if instances < 3 then instances else 3)}
         '';
@@ -29,7 +31,7 @@ let
       services.zookeeper = {
         enable  = true;
         id      = node.id;
-        dataDir = "/data-zk";
+        dataDir = zkDataDir;
         servers =
           let configLine = node: "server.${toString node.id}=${node.name}:2888:3888";
           in  concatStringsSep "\n" (map configLine nodes);
