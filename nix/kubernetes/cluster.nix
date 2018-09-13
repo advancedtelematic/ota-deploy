@@ -63,7 +63,7 @@ in {
     enableIPv6 = false;
     extraHosts = ''
       ${masterHost.config.networking.privateIPv4} api.${domain}
-      ${lib.concatMapStringsSep "\n" (hostName:"${nodes.${hostName}.config.networking.privateIPv4} ${hostName}.${domain}") (attrNames nodes)}
+      ${concatMapStringsSep "\n" (hostName:"${nodes.${hostName}.config.networking.privateIPv4} ${hostName}.${domain}") (attrNames nodes)}
     '';
 
     firewall = let
@@ -74,7 +74,7 @@ in {
     in {
       allowedTCPPorts   = if isMaster then ssh ++ api ++ etcd ++ kubelet else ssh ++ kubelet;
       trustedInterfaces = [ "docker0" "flannel.1" "zt0" ];
-      extraCommands     = lib.concatMapStrings (node: ''
+      extraCommands     = concatMapStrings (node: ''
         iptables -A INPUT -s ${node.config.networking.privateIPv4} -j ACCEPT
       '') (attrValues nodes);
     };

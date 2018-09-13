@@ -1,5 +1,5 @@
-with import ../nixos.nix;
 with import ../nixpkgs.nix;
+with import ../nixos {};
 with pkgs.lib;
 
 let
@@ -13,12 +13,11 @@ let
   };
 
   makeServers = { ... }: {
+    defaults.imports = [ ../common.nix ];
     network = {
       description = "VirtualBox OTA Services";
       enableRollback = true;
     };
-
-    defaults.imports = [ ../common.nix ];
 
     db = import ../mariadb { inherit dbImage; };
 
@@ -30,9 +29,7 @@ let
             kubernetes,admin,0,"system:masters"
           '';
         };
-      in {
-        imports = [ cluster ];
-      };
+      in { imports = [ cluster ]; };
 
   } // kafkaBrokers;
 

@@ -34,7 +34,7 @@ let
     pkgs.runCommand content.name { buildInputs = [ pkgs.cfssl pkgs.jq ]; } ''
        mkdir -p $out
        cd $out
-       json=${lib.escapeShellArg (toJSON content)}
+       json=${escapeShellArg (toJSON content)}
        # for a given $field in the $json, treat the associated value as a
        # file path and substitute the contents thereof into the $json
        # object.
@@ -51,11 +51,11 @@ let
        echo "$json" | cfssljson -bare ${content.name}
     '';
 
-  noCSR = content: lib.filterAttrs (n: v: n != "csr") content;
-  noKey = content: lib.filterAttrs (n: v: n != "key") content;
+  noCSR = content: filterAttrs (n: v: n != "csr") content;
+  noKey = content: filterAttrs (n: v: n != "key") content;
 
   writeFile = content:
-    if lib.isDerivation content then content else pkgs.writeText "content" (toJSON content);
+    if isDerivation content then content else pkgs.writeText "content" (toJSON content);
 
   createServingCertKey = { ca, cn, hosts? [], size ? 2048, name ? cn }:
     noCSR (
@@ -136,7 +136,7 @@ let
   etcd = createServingCertKey {
     inherit ca;
     cn    = "etcd";
-    hosts = (lib.concatLists [["etcd.${externalDomain}"] etcdMasterHosts]);
+    hosts = (concatLists [["etcd.${externalDomain}"] etcdMasterHosts]);
   };
 
   etcd-client = createClientCertKey {
