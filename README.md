@@ -18,29 +18,42 @@ nix-env -i nixops
 
 ### Setting deployment configuration values
 
-The default config values applied to all instances can be found at `nix/common.nix`.
+The default config values applied to all instances can be found at `nix/deploy/common.nix`.
 
 In particular, you will want to set `users.root.openssh.authorizedKeys.keyFiles` to a public key for bootstrapping services. By default, this is set to `~/.ssh/id_rsa.pub`.
 
-### Setting up VirtualBox deployments
+### Set up host-only networking
 
-After installing VirtualBox, ensure you have a host-only network named `vboxnet0` created with DHCP enabled.
+Before deployment, create a host-only VirtualBox network named `vboxnet0` with DHCP:
+
+```
+vboxmanage hostonlyif create
+vboxmanage hostonlyif ipconfig vboxnet0 --ip 192.168.56.1
+vboxmanage dhcpserver add --ifname vboxnet0 \
+  --ip 192.168.56.1 \
+  --netmask 255.255.255.0 \
+  --lowerip 192.168.56.100 \
+  --upperip 192.168.56.200
+vboxmanage dhcpserver modify --ifname vboxnet0 --enable
+```
 
 ### Building Linux packages in macOS
 
-Set up [Remote Builds](https://nixos.org/nix/manual/#chap-distributed-builds) to allow building `x86_64-linux` packages from macOS. Docker can be used for this purpose via the [nix-docker](https://github.com/LnL7/nix-docker#running-as-a-remote-builder) repository.
+The simplest way to allow building `x86_64-linux` packages from macOS is by installing [linuxkit-builder](https://github.com/nix-community/linuxkit-builder).
 
-For a quick-start guide, take a look at [Provisioning a NixOS server from macOS](https://medium.com/@zw3rk/provisioning-a-nixos-server-from-macos-d36055afc4ad).
+Alternatively, you can set up [Remote Builds](https://nixos.org/nix/manual/#chap-distributed-builds) (where a guide can be found at [this blog post](https://medium.com/@zw3rk/provisioning-a-nixos-server-from-macos-d36055afc4ad)).
 
 ## Deploying the OTA services
 
-Run `make` without any arguments to see a list of the available deployment targets.
+Run `make` without any arguments to see a list of the available deployment targets. To deploy a VirtualBox environment with all OTA services, run the following commands:
 
-For example, to deploy all OTA services to VirtualBox use the following command:
+```
+make vmdk
+make create
+make deploy
+```
 
-`make create-vbox`
-
-This will create a NixOps deployment using the definition from `nix/vbox/default.nix`.
+This will create a deployment using the definition from `nix/deploy/vbox.nix`. Set the `DEPLOY` environment variable before running `make` commands to select a different definition.
 
 ### Setting up kubectl for VirtualBox
 

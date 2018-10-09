@@ -1,7 +1,8 @@
-{ config
+{ pkgs ? import ../../nixpkgs {}
+, config
 , nodes
-, domain ? "kubernetes.local"
-, authorizationMode ? ["RBAC" "Node"]
+, domain ? "kube.local"
+, authorizationMode ? [ "RBAC" "Node" ]
 , basicAuthFile ? null
 , oidc ? {
     issuerUrl     = "https://${domain}/auth/realms/master";
@@ -10,11 +11,9 @@
     groupsClaim   = "groups";
     groupsPrefix  = "oidc:";
   }
-, ...
 }:
 
 with builtins;
-with import ../nixpkgs.nix;
 with pkgs.lib;
 
 let

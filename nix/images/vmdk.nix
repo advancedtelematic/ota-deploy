@@ -1,15 +1,10 @@
-{ system ? "x86_64-linux", ... }:
-
-with import ../nixpkgs.nix;
+{ pkgs ? import ../nixpkgs {}
+, system ? "x86_64-linux"
+}:
 
 let
-  nixpkgs = fetchRepo "nixpkgs";
-  nixops  = fetchRepo "nixops";
-
-  machine = import "${nixpkgs}/nixos" {
-    inherit system;
-    configuration = import "${nixops}/nix/virtualbox-image-nixops.nix";
-  };
+  configuration = import "${pkgs.fetchRepo "nixops"}/nix/virtualbox-image-nixops.nix";
+  machine = import "${pkgs.tarball}/nixos" { inherit system configuration; };
   ova = machine.config.system.build.virtualBoxOVA;
 
 in pkgs.stdenv.mkDerivation rec {

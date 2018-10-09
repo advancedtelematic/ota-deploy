@@ -1,11 +1,11 @@
-{ kubelets
+{ pkgs ? import ../../nixpkgs {}
+, kubelets
 , externalDomain   ? "ota.local"
 , serviceClusterIp ? "10.0.0.1"
 , etcdMasterHosts  ? []
 }:
 
 with builtins;
-with import ../nixpkgs.nix;
 with pkgs.lib;
 
 let
