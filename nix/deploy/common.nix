@@ -1,6 +1,8 @@
 { authorizedKeys ? [ ~/.ssh/id_rsa.pub ] }:
 
-{
+let
+
+in {
   i18n.defaultLocale = "en_US.UTF-8";
 
   networking.firewall = {

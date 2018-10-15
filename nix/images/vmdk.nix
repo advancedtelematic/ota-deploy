@@ -3,8 +3,12 @@
 }:
 
 let
-  configuration = import "${pkgs.fetchRepo "nixops"}/nix/virtualbox-image-nixops.nix";
-  machine = import "${pkgs.tarball}/nixos" { inherit system configuration; };
+  nixpkgs = pkgs.tarball;
+  nixops  = pkgs.fetchRepo "nixops";
+
+  configuration = import "${nixops}/nix/virtualbox-image-nixops.nix";
+  machine       = import "${nixpkgs}/nixos" { inherit system configuration; };
+
   ova = machine.config.system.build.virtualBoxOVA;
 
 in pkgs.stdenv.mkDerivation rec {

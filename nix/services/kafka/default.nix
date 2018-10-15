@@ -19,6 +19,7 @@ in {
     logDirs = [ dataDir ];
     extraProperties = ''
       offsets.topic.replication.factor = ${toString (if brokers < 3 then brokers else 3)}
+      zookeeper.connection.timeout.ms  = 60000
     '';
   };
 }
