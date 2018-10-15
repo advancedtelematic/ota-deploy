@@ -34,6 +34,10 @@ in {
       disks.disk1.baseImage = images.vmdkImage;
     };
 
-    networking.firewall.allowedTCPPorts = [ 22 3306 9042 ];
+    networking.firewall.allowedTCPPorts = [ 22 ];
+
+    systemd.services.apache-kafka = {
+      after = [ "zookeeper.service" ];
+    };
   };
 }
