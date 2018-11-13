@@ -1,30 +1,25 @@
 { pkgs ? import ../nixpkgs {}
 , cpu ? 4
 , mem ? 8192
-, kubeUser ? "admin"
-, kubePass ? "password"
 }:
 
 let
-  inherit (pkgs) writeText;
-
-  common = import ./common.nix {};
-  images = import ../images {};
-
-  cassandra = import ../services/cassandra {};
-  mariadb   = import ../services/mariadb {};
-  kafka     = import ../services/kafka {};
-  zookeeper = import ../services/zookeeper {};
-
-  kube = { config, nodes, ... }:
-    let basicAuthFile = writeText "users" ''${kubePass},${kubeUser},0,"system:masters"'';
-    in  import ../services/kubernetes { inherit config nodes basicAuthFile; };
+  common   = import ./common.nix {};
+  images   = import ../images {};
+  services = import ../services {};
 
 in {
-  network.description = "VirtualBox OTA Deployment";
+  network.description = "OTA VirtualBox";
 
   vbox = {
-    imports = [ common cassandra mariadb kafka zookeeper kube ];
+    imports = [
+      common
+      services.cassandra
+      services.kafka
+      services.kubernetes
+      services.mariadb
+      services.zookeeper
+    ];
 
     deployment.targetEnv  = "virtualbox";
     deployment.virtualbox = {
@@ -35,9 +30,5 @@ in {
     };
 
     networking.firewall.allowedTCPPorts = [ 22 ];
-
-    systemd.services.apache-kafka = {
-      after = [ "zookeeper.service" ];
-    };
   };
 }

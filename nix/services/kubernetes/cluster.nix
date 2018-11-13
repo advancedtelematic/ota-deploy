@@ -67,7 +67,7 @@ in {
 
     firewall = let
       ssh     = [ 22 ];
-      api     = [ 443 ];
+      api     = [ 6443 ];
       etcd    = [ 2379 2380 ];
       kubelet = [ 10250 10255 ];
     in {
@@ -109,11 +109,9 @@ in {
     flannel.enable = true;
     clusterCidr    = "10.1.0.0/16";
 
-    addons = {
-      dns = {
-        enable = true;
-        clusterDomain = "cluster.local";
-      };
+    addons.dns = {
+      enable = true;
+      clusterDomain = "ota.local";
     };
     verbose = true;
 
@@ -125,6 +123,7 @@ in {
     } else {
       advertiseAddress      = masterHost.config.networking.privateIPv4;
       bindAddress           = "0.0.0.0";
+      securePort            = 6443;
       tlsCertFile           = "${certs.master}/kube-apiserver.pem";
       tlsKeyFile            = "${certs.master}/kube-apiserver-key.pem";
       kubeletClientCertFile = "${certs.master}/kubelet-client.pem";
@@ -149,7 +148,7 @@ in {
     };
 
     kubeconfig = {
-      server = "https://api.${config.networking.domain}";
+      server = "https://api.${config.networking.domain}:6443";
     };
 
     kubelet = {
