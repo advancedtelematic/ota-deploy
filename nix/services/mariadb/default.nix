@@ -5,7 +5,7 @@
 
 let
   permissions = name: { inherit name; ensurePermissions = { "${name}.*" = "ALL PRIVILEGES"; }; };
-  ensureUsers = map permissions databases;
+  ensureUsers = map permissions ensureDatabases;
 
 in {
   services.mysql = {

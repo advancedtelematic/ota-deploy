@@ -7,18 +7,17 @@ let
   nixops  = pkgs.fetchRepo "nixops";
 
   configuration = import "${nixops}/nix/virtualbox-image-nixops.nix";
-  machine       = import "${nixpkgs}/nixos" { inherit system configuration; };
-
-  ova = machine.config.system.build.virtualBoxOVA;
+  nixos = import "${nixpkgs}/nixos" { inherit system configuration; };
+  image = nixos.config.system.build.virtualBoxOVA;
 
 in pkgs.stdenv.mkDerivation rec {
-  name    = "virtualbox-nixops-image-${version}";
+  name    = "nixos-vbox-${version}";
   phases  = [ "installPhase" ];
-  version = machine.config.system.stateVersion;
-  nativeBuildInputs = [ ova ];
+  version = nixos.config.system.stateVersion;
+  nativeBuildInputs = [ image ];
   installPhase = ''
     mkdir -p $out
-    tar -xf ${ova}/*.ova -C $out
+    tar -xf ${image}/*.ova -C $out
     mv $out/{nixos*,nixos}.vmdk
     sha256sum $out/nixos.vmdk > $out/nixos.vmdk.sha256
   '';

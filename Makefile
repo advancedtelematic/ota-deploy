@@ -1,11 +1,11 @@
 SHELL := /usr/bin/env bash
 
-DEPLOY  ?= vbox
+DEPLOY  ?= qemu
 STATE   ?= state.nixops
 COMMIT  ?= $(shell nix eval --raw '(import nix/nixpkgs/versions.nix).nixpkgs.rev')
 NIXPKGS ?= https://github.com/NixOS/nixpkgs/archive/$(COMMIT).tar.gz
-INCLUDE ?= -I nixpkgs=$(NIXPKGS)
-NIXOPS  ?= --deployment $(DEPLOY) --state $(STATE) $(INCLUDE) $(APPEND)
+INCLUDE ?= -I nixpkgs=$(NIXPKGS) $(APPEND)
+NIXOPS  ?= --deployment $(DEPLOY) --state $(STATE) $(INCLUDE)
 
 .PHONY: list start stop create deploy destroy delete shell vmdk cmd_nixops
 .DEFAULT_GOAL := help
@@ -34,14 +34,17 @@ delete: %: nixops_%  ## Delete a created deployment template.
 shell: cmd_nix-shell  ## Start a Nix shell.
 	@nix-shell --pure --argstr deploy $(DEPLOY) --argstr state $(STATE)
 
-vmdk: cmd_nix-build  ## Build a VMDK image.
-	@nix-build $(INCLUDE) nix/images/vmdk.nix
+build-qcow: build-%: build_%   ## Build a QCOW2 NixOS image.
+build-vmdk: build-%: build_%   ## Build a VMDK NixOS image.
 
 
 ### Auxiliary targets
 
 nixops_%: cmd_nixops # Run a NixOps command.
 	@nixops $* $(NIXOPS)
+
+build_%: cmd_nix-build # Build an image.
+	@nix-build $(INCLUDE) nix/images/$*.nix
 
 exists_%: cmd_nixops # Check that a deployment exists.
 	@$(if $(shell nixops list $(NIXOPS) | grep $(DEPLOY)),, $(error $(DEPLOY) deployment not found))

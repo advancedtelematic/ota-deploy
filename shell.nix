@@ -7,6 +7,7 @@ with pkgs;
 
 mkShell {
   buildInputs = [
+    cacert
     nix
     nixops
   ];
