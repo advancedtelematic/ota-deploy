@@ -8,6 +8,9 @@ let
   images   = import ../images {};
   services = import ../services {};
 
+  getUri = builtins.getEnv "LIBVIRT_DEFAULT_URI";
+  URI = if getUri != "" then getUri else "qemu:///system";
+
 in {
   network.description = "OTA QEMU";
 
@@ -26,7 +29,9 @@ in {
       vcpu       = cpu;
       memorySize = mem;
       headless   = true;
-      baseImage  = images.qcowImage;
+      baseImage  = images.qcow;
+
+      inherit URI;
       extraDevicesXML = ''
         <graphics type='vnc' port='-1' autoport='yes'/>
       '';

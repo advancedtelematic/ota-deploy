@@ -13,7 +13,7 @@ mkShell {
   ];
 
   shellHook = ''
-    export NIX_PATH="nixpkgs=${pkgs.tarball}:."
+    export NIX_PATH="nixpkgs=${pkgs.nixpkgs}:."
     export NIXOPS_STATE=${state}
     export NIXOPS_DEPLOYMENT=${deploy}
   '';

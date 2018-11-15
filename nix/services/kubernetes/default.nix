@@ -10,6 +10,8 @@ let
 
 in {
   imports = [ cluster ];
-  services.flannel.iface = "enp0s8";
-  services.kubernetes = { inherit dataDir roles; };
+
+  services.kubernetes = {
+    inherit dataDir roles;
+  };
 }

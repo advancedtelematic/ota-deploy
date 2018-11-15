@@ -24,18 +24,18 @@ create: not_exists_$(DEPLOY)  ## Create a new deployment template.
 	@nixops create nix/deploy/$(DEPLOY).nix $(NIXOPS)
 
 deploy: exists_$(DEPLOY)  ## Provision resources from a created template.
-	@nixops deploy --kill-obsolete --allow-reboot $(NIXOPS)
+	@nixops deploy $(NIXOPS) --kill-obsolete --allow-reboot
 
 destroy: exists_$(DEPLOY)  ## Destroy all data and provisioned resources.
-	@nixops destroy --confirm $(NIXOPS)
+	@nixops destroy $(NIXOPS) --confirm
 
 delete: %: nixops_%  ## Delete a created deployment template.
 
 shell: cmd_nix-shell  ## Start a Nix shell.
 	@nix-shell --pure --argstr deploy $(DEPLOY) --argstr state $(STATE)
 
-build-qcow: build-%: build_%   ## Build a QCOW2 NixOS image.
-build-vmdk: build-%: build_%   ## Build a VMDK NixOS image.
+build-qcow: build-%: build_%   ## Build a QCOW2 OTA image.
+build-vmdk: build-%: build_%   ## Build a VMDK OTA image.
 
 
 ### Auxiliary targets

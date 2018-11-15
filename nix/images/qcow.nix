@@ -6,10 +6,8 @@
 }:
 
 let
-  nixpkgs = pkgs.tarball;
-
   configuration = {
-    imports = [ "${nixpkgs}/nixos/modules/profiles/qemu-guest.nix" ];
+    imports = [ "${pkgs.nixpkgs}/nixos/modules/profiles/qemu-guest.nix" ];
 
     boot = {
       initrd = {
@@ -33,10 +31,20 @@ let
     security.rngd.enable = false;
   };
 
-  nixos = import "${nixpkgs}/nixos" { inherit system configuration; };
-  image = import "${nixpkgs}/nixos/lib/make-disk-image.nix" {
+  nixos = import "${pkgs.nixpkgs}/nixos" { inherit system configuration; };
+  image = import "${pkgs.nixpkgs}/nixos/lib/make-disk-image.nix" {
     inherit pkgs lib diskSize format;
     inherit (nixos) config;
   };
 
-in image
+in pkgs.stdenv.mkDerivation rec {
+  name = "nixos-qemu-${version}";
+  version = nixos.config.system.stateVersion;
+  nativeBuildInputs = [ image ];
+  phases = [ "installPhase" ];
+  installPhase = ''
+    mkdir -p $out
+    cp ${image}/nixos.qcow2 $out/disk.qcow2
+    sha256sum $out/disk.qcow2 > $out/disk.qcow2.sha256
+  '';
+}

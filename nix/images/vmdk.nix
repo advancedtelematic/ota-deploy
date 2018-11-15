@@ -3,7 +3,7 @@
 }:
 
 let
-  nixpkgs = pkgs.tarball;
+  nixpkgs = pkgs.nixpkgs;
   nixops  = pkgs.fetchRepo "nixops";
 
   configuration = import "${nixops}/nix/virtualbox-image-nixops.nix";
