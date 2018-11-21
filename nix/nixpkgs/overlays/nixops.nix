@@ -8,6 +8,6 @@ let
 
 in {
   nixops = super.nixops.overrideAttrs(attrs: {
-    patches = attrs.patches or [] ++ [ patch824 ];
+    patches = (attrs.patches or []) ++ [ patch824 ];
   });
 }

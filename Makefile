@@ -1,6 +1,6 @@
 SHELL := /usr/bin/env bash
 
-DEPLOY  ?= qemu
+DEPLOY  ?= vbox
 STATE   ?= state.nixops
 COMMIT  ?= $(shell nix eval --raw '(import nix/nixpkgs/versions.nix).nixpkgs.rev')
 NIXPKGS ?= https://github.com/NixOS/nixpkgs/archive/$(COMMIT).tar.gz

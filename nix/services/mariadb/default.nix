@@ -11,6 +11,7 @@ in {
   services.mysql = {
     enable  = true;
     package = pkgs.mariadb;
-    inherit dataDir ensureDatabases ensureUsers;
+    #inherit dataDir ensureDatabases ensureUsers;
+    inherit dataDir;
   };
 }
